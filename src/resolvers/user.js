@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import generateToken from '../lib/generateToken';
 
 export default {
   Query: {
@@ -20,11 +20,7 @@ export default {
         password: await bcrypt.hash(password, 10),
       });
 
-      return jwt.sign(
-        { id: user.id, email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: '1y' }
-      );
+      return generateToken(user);
     },
     async login(_, { email, password }, { models }) {
       const user = await models.User.findOne({ where: { email } });
@@ -39,11 +35,7 @@ export default {
         throw new Error('Incorrect password');
       }
 
-      return jwt.sign(
-        { id: user.id, email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: '1d' }
-      );
+      return generateToken(user);
     },
   },
 };
