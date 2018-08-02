@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import path from 'path';
+import cors from 'cors';
 import express from 'express';
 import jwt from 'express-jwt';
 import bodyParser from 'body-parser';
@@ -24,6 +25,8 @@ const auth = jwt({
   secret: process.env.JWT_SECRET,
   credentialsRequired: false,
 });
+
+app.use(cors('*'));
 
 app.use(
   graphqlEndpoint,
